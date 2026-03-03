@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
+export GH_CONFIG_DIR="$REPO_DIR/.gh"
+mkdir -p "$GH_CONFIG_DIR"
+
+exec gh "$@"
