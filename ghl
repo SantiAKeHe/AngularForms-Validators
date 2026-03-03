@@ -5,4 +5,70 @@ REPO_DIR="$(cd "$(dirname "$0")" && pwd)"
 export GH_CONFIG_DIR="$REPO_DIR/.gh"
 mkdir -p "$GH_CONFIG_DIR"
 
+usage() {
+  echo "Usage:"
+  echo "  ./ghl <gh-args...>        # passthrough to gh using isolated config"
+  echo "  ./ghl jr <issue-number>   # run JR workflow for a labeled issue"
+}
+
+if [[ "${1:-}" == "jr" ]]; then
+  ISSUE="${2:-}"
+  if [[ -z "${ISSUE}" || ! "${ISSUE}" =~ ^[0-9]+$ ]]; then
+    usage
+    exit 2
+  fi
+
+  # 1) Validate label "jr" (case-insensitive)
+  LABELS="$(gh issue view "$ISSUE" --json labels -q '.labels[].name')"
+  LABELS_LC="$(echo "$LABELS" | tr '[:upper:]' '[:lower:]')"
+  if ! echo "$LABELS_LC" | grep -qx "jr"; then
+    echo "Abort: Issue #$ISSUE must have label \"jr\"."
+    exit 1
+  fi
+
+  # 2) Read issue + rules (source of truth)
+  TITLE="$(gh issue view "$ISSUE" --json title -q '.title')"
+  BODY="$(gh issue view "$ISSUE" --json body -q '.body')"
+  RULES="$(cat "$REPO_DIR/.github/copilot-instructions.md")"
+
+  # 3) Branch
+  BRANCH="jr/$ISSUE"
+  git checkout -b "$BRANCH"
+
+  # 4) Prompt (only rules + issue)
+  PROMPT="$(cat <<EOF
+$RULES
+
+---
+ISSUE #$ISSUE
+Title: $TITLE
+
+$BODY
+EOF
+)"
+
+  # 5) Run Copilot
+  copilot -p "$PROMPT"
+
+  # 6) Validate
+  pushd "$REPO_DIR/angularApp" >/dev/null
+  npx ng build
+  npx ng test --watch=false
+  popd >/dev/null
+
+  # 7) Commit + push + PR
+  git add -A
+  git commit -m "feat(forms): resolve #$ISSUE - $TITLE"
+  git push -u origin "$BRANCH"
+  gh pr create --base main --head "$BRANCH" --title "feat(forms): resolve #$ISSUE - $TITLE" --body "Closes #$ISSUE"
+
+  echo "Done."
+  exit 0
+fi
+
+if [[ $# -eq 0 ]]; then
+  usage
+  exit 2
+fi
+
 exec gh "$@"
