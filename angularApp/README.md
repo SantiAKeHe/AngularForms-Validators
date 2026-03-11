@@ -1,59 +1,94 @@
-# AngularApp
+# Angular Forms & Validators
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.5.
+Aplicación educativa construida con **Angular 19** para aprender y practicar Angular Forms y la creación de Validators personalizados.
 
-## Development server
+---
 
-To start a local development server, run:
+## Objetivo
+
+Este proyecto sirve como referencia práctica para entender:
+
+- Cómo funcionan los formularios reactivos en Angular
+- Cómo crear y usar validators built-in
+- Cómo construir validators personalizados tipados y testeables
+
+No es una aplicación de producción. El código está orientado a la claridad y al aprendizaje.
+
+---
+
+## Temas cubiertos
+
+### Reactive Forms
+
+- `FormControl<T>` — control individual tipado
+- `FormGroup` — agrupación de controles
+- `FormArray` — listas dinámicas de controles
+- `FormBuilder` — construcción declarativa de formularios
+
+### Validators built-in
+
+| Validator              | Descripción                        |
+| ---------------------- | ---------------------------------- |
+| `Validators.required`  | Campo obligatorio                  |
+| `Validators.minLength` | Longitud mínima de caracteres      |
+| `Validators.maxLength` | Longitud máxima de caracteres      |
+| `Validators.min`       | Valor numérico mínimo              |
+| `Validators.max`       | Valor numérico máximo              |
+| `Validators.email`     | Formato de email válido            |
+| `Validators.pattern`   | Validación por expresión regular   |
+
+### Validators personalizados (Custom Validators)
+
+- **Síncronos**: función que recibe un `AbstractControl` y retorna `ValidationErrors | null`
+- **Asíncronos**: retornan `Promise` u `Observable`
+- **Validator factories**: funciones que reciben parámetros y retornan un `ValidatorFn`
+- **Cross-field validators**: aplicados a un `FormGroup` para validar relaciones entre campos
+
+### Testing de Validators
+
+Todos los validators personalizados incluyen tests unitarios con **Jasmine + Angular TestBed**.
+
+---
+
+## Stack técnico
+
+| Elemento        | Tecnología                   |
+| --------------- | ---------------------------- |
+| Framework       | Angular 19 (standalone APIs) |
+| Lenguaje        | TypeScript — strict mode     |
+| Testing         | Jasmine + Angular TestBed    |
+| Package manager | npm                          |
+
+---
+
+## Comandos principales
 
 ```bash
+# Instalar dependencias
+npm install
+
+# Servidor de desarrollo
 ng serve
-```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+# Ejecutar tests
+ng test --watch=false
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
+# Build de producción
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+---
 
-## Running unit tests
+## Estructura relevante
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
+angularApp/src/app/
+├── app.ts                      # Componente raíz
+├── app.config.ts               # Configuración standalone
+├── app.routes.ts               # Rutas de la aplicación
+└── [feature]/
+    ├── feature.component.ts
+    ├── feature.component.html
+    ├── feature.validator.ts
+    └── feature.validator.spec.ts
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+ISSUE_NUM="$2"
+
+TITLE=$(gh issue view "$ISSUE_NUM" --json title -q '.title')
+BODY=$(gh issue view "$ISSUE_NUM" --json body -q '.body')
+
+echo "📋 Issue #${ISSUE_NUM}: $TITLE"
+
+PROMPT="Implement GitHub Issue #${ISSUE_NUM}: ${TITLE}
+
+${BODY}
+
+Only modify files inside angularApp/src/app/. Do not touch package.json."
+
+cd angularApp
+claude -p "$PROMPT" \
+  --allowedTools "Read" "Edit" "Write" "Glob" "Grep" "Bash(ng generate *)"
