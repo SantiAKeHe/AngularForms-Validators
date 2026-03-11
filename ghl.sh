@@ -44,3 +44,33 @@ if git diff --cached --quiet; then
   exit 1
 fi
 echo "✅ Cambios detectados"
+
+echo "🔨 Ejecutando ng build..."
+cd angularApp
+npx ng build || { echo "❌ Build falló. Abortando."; exit 1; }
+cd ..
+echo "✅ Build exitoso"
+
+# ng test
+echo "🧪 Ejecutando ng test..."
+cd angularApp
+npx ng test --watch=false || { echo "❌ Tests fallaron. Abortando."; exit 1; }
+cd ..
+echo "✅ Tests exitosos"
+
+# Commit + Push + PR
+echo "📦 Creando commit..."
+git commit -m "feat(jr): issue #${ISSUE_NUM} — ${TITLE}"
+
+echo "🚀 Subiendo rama..."
+git push --set-upstream origin "$BRANCH"
+
+echo "🔁 Creando PR..."
+gh pr create \
+  --base main \
+  --head "$BRANCH" \
+  --title "feat(jr): #${ISSUE_NUM} — ${TITLE}" \
+  --body "Closes #${ISSUE_NUM}"
+
+echo ""
+echo "✅ Flujo completo — PR creado para issue #${ISSUE_NUM}"
