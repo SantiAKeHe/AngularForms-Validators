@@ -1,16 +1,18 @@
 # Angular Forms & Validators
 
-> Aplicación educativa con **Angular 19** para aprender Reactive Forms y Validators personalizados — con ejemplos reales y tests incluidos.
+> Aplicación educativa con **Angular 19** para aprender Reactive Forms, Template-driven Forms y Custom Validators — con ejemplos reales, live playground y tests incluidos.
 
 ---
 
 ## Contenidos
 
 - [Reactive Forms](#reactive-forms)
+- [Template-driven Forms](#template-driven-forms)
 - [Validators built-in](#validators-built-in)
 - [Custom Validators](#custom-validators)
 - [Testing de Validators](#testing-de-validators)
 - [Stack técnico](#stack-técnico)
+- [Rutas](#rutas)
 - [Comandos](#comandos)
 - [Estructura del proyecto](#estructura-del-proyecto)
 
@@ -18,29 +20,33 @@
 
 ## Reactive Forms
 
-Los formularios reactivos se definen en la clase del componente, no en el template.
+Los formularios reactivos se definen en la clase del componente usando `FormBuilder`. Nunca se usa `new FormControl()` o `new FormGroup()` directamente.
 
 ```ts
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, inject } from '@angular/core';
+import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 
-const form = new FormGroup({
-  name: new FormControl<string>('', Validators.required),
-  email: new FormControl<string>('', [Validators.required, Validators.email]),
-  age: new FormControl<number | null>(null, [Validators.min(18), Validators.max(99)]),
-});
-```
+@Component({ /* ... */ })
+export class MyComponent {
+  private fb = inject(FormBuilder);
 
-### Acceder a valores y errores
+  form = this.fb.group({
+    name:  this.fb.control<string>('', Validators.required),
+    email: this.fb.control<string>('', {
+      validators: [Validators.required, Validators.email],
+      updateOn: 'blur'
+    }),
+    age: this.fb.control<number | null>(null, [
+      Validators.required,
+      Validators.min(18)
+    ]),
+  });
 
-```ts
-// Leer valor actual
-const email = form.controls.email.value; // string
-
-// Verificar si un control tiene error
-const hasError = form.controls.email.hasError('required');
-
-// Estado general del form
-const isValid = form.valid;
+  // Acceso tipado con getters — nunca form.get('field') en el template
+  get email(): FormControl<string> {
+    return this.form.controls.email;
+  }
+}
 ```
 
 ### Template binding
@@ -57,98 +63,165 @@ const isValid = form.valid;
 </form>
 ```
 
+### Playground — estado en tiempo real
+
+```html
+<pre class="playground-state">{{ form.value | json }}</pre>
+<pre class="playground-state">Status: {{ form.status }}</pre>
+```
+
+---
+
+## Template-driven Forms
+
+Enfoque declarativo usando `ngModel`. Apropiado para formularios simples sin lógica dinámica.
+
+```ts
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+
+@Component({
+  standalone: true,
+  imports: [FormsModule],
+  /* ... */
+})
+export class MyComponent {
+  model = { name: '', email: '' };
+}
+```
+
+```html
+<form #myForm="ngForm">
+  <input
+    name="name"
+    [(ngModel)]="model.name"
+    #nameRef="ngModel"
+    required
+  />
+  @if (nameRef.invalid && nameRef.touched) {
+    <span>This field is required</span>
+  }
+</form>
+```
+
+> **Cuándo usar:** formularios simples de comparación educativa. Para formularios dinámicos o con validación compleja, siempre usar Reactive Forms.
+
 ---
 
 ## Validators built-in
 
 Angular incluye validators listos para usar:
 
-| Validator              | Descripción                      | Ejemplo                              |
-| ---------------------- | -------------------------------- | ------------------------------------ |
-| `Validators.required`  | Campo obligatorio                | `Validators.required`                |
-| `Validators.minLength` | Mínimo de caracteres             | `Validators.minLength(3)`            |
-| `Validators.maxLength` | Máximo de caracteres             | `Validators.maxLength(50)`           |
-| `Validators.min`       | Valor numérico mínimo            | `Validators.min(0)`                  |
-| `Validators.max`       | Valor numérico máximo            | `Validators.max(100)`                |
-| `Validators.email`     | Formato de email                 | `Validators.email`                   |
-| `Validators.pattern`   | Expresión regular                | `Validators.pattern(/^[a-z]+$/)`     |
+| Validator              | Descripción               | Ejemplo                          |
+| ---------------------- | ------------------------- | -------------------------------- |
+| `Validators.required`  | Campo obligatorio         | `Validators.required`            |
+| `Validators.minLength` | Mínimo de caracteres      | `Validators.minLength(3)`        |
+| `Validators.maxLength` | Máximo de caracteres      | `Validators.maxLength(50)`       |
+| `Validators.min`       | Valor numérico mínimo     | `Validators.min(0)`              |
+| `Validators.max`       | Valor numérico máximo     | `Validators.max(100)`            |
+| `Validators.email`     | Formato de email          | `Validators.email`               |
+| `Validators.pattern`   | Expresión regular         | `Validators.pattern(/^[a-z]+$/)` |
 
 ### Combinar validators
 
 ```ts
-const password = new FormControl<string>('', [
+password: this.fb.control<string>('', [
   Validators.required,
   Validators.minLength(8),
   Validators.pattern(/[A-Z]/), // al menos una mayúscula
-]);
+])
 ```
 
 ---
 
 ## Custom Validators
 
-### Validator síncrono
+Existen tres tipos según la necesidad. Todos devuelven `ValidationErrors | null`.
 
-Un validator es una función que recibe un `AbstractControl` y retorna `ValidationErrors | null`.
+### Tipo 1 — Simple Validator
 
-```ts
-import { AbstractControl, ValidationErrors } from '@angular/forms';
-
-export function noSpacesValidator(control: AbstractControl): ValidationErrors | null {
-  const hasSpaces = (control.value as string)?.includes(' ');
-  return hasSpaces ? { noSpaces: true } : null;
-}
-```
+Una sola responsabilidad. Aplicado directamente a un `FormControl`.
 
 ```ts
-// Uso
-const username = new FormControl<string>('', [Validators.required, noSpacesValidator]);
-```
+// no-spaces.validator.ts
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
-### Validator factory (con parámetros)
-
-```ts
-export function minAgeValidator(minAge: number): ValidatorFn {
+export function noSpacesValidator(): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
-    const age = control.value as number;
-    return age < minAge ? { minAge: { required: minAge, actual: age } } : null;
+    const hasSpaces = (control.value as string)?.includes(' ');
+    return hasSpaces ? { noSpaces: true } : null;
   };
 }
 ```
 
 ```ts
 // Uso
-const age = new FormControl<number | null>(null, minAgeValidator(18));
+username: this.fb.control<string>('', [
+  Validators.required,
+  noSpacesValidator()
+])
 ```
 
-### Cross-field validator (a nivel de FormGroup)
+### Tipo 2 — Factory Validator (con parámetro)
+
+Una función que acepta un parámetro y retorna un `ValidatorFn`. Usar cuando la regla depende de un valor configurable.
 
 ```ts
-export function passwordMatchValidator(group: AbstractControl): ValidationErrors | null {
-  const password = group.get('password')?.value as string;
-  const confirm = group.get('confirm')?.value as string;
-  return password !== confirm ? { passwordMismatch: true } : null;
+// min-age.validator.ts
+export function minAgeValidator(minAge: number): ValidatorFn {
+  return (control: AbstractControl): ValidationErrors | null => {
+    const age = control.value as number;
+    return age < minAge
+      ? { minAge: { required: minAge, actual: age } }
+      : null;
+  };
 }
 ```
 
 ```ts
-// Aplicado al FormGroup
-const form = new FormGroup(
+// Uso — el parámetro va en la llamada a la factory
+age: this.fb.control<number | null>(null, [
+  Validators.required,
+  minAgeValidator(18)
+])
+```
+
+### Tipo 3 — Cross-field Validator (a nivel de FormGroup)
+
+Aplicado al `FormGroup`, no a un control individual. Tiene acceso a todos los controles hermanos para poder compararlos.
+
+```ts
+// password-match.validator.ts
+export function passwordMatchValidator(): ValidatorFn {
+  return (group: AbstractControl): ValidationErrors | null => {
+    const fg      = group as FormGroup;
+    const pass    = fg.controls['password'].value;
+    const confirm = fg.controls['confirmPassword'].value;
+    return pass !== confirm ? { passwordMismatch: true } : null;
+  };
+}
+```
+
+```ts
+// Uso — se pasa como validador del grupo, no de un control
+this.fb.group(
   {
-    password: new FormControl<string>('', Validators.required),
-    confirm: new FormControl<string>('', Validators.required),
+    password:        this.fb.control<string>('', Validators.required),
+    confirmPassword: this.fb.control<string>('', Validators.required),
   },
-  { validators: passwordMatchValidator }
-);
+  { validators: passwordMatchValidator() }
+)
 ```
 
 ```html
-@if (form.hasError('passwordMismatch')) {
-  <span>Las contraseñas no coinciden.</span>
+@if (passwordForm.hasError('passwordMismatch') && confirmPassword.touched) {
+  <div class="alert alert--error">Passwords do not match.</div>
 }
 ```
 
 ### Validator asíncrono
+
+Para validaciones que requieren una llamada a una API (p.ej. verificar si un email ya existe).
 
 ```ts
 import { AbstractControl, AsyncValidatorFn, ValidationErrors } from '@angular/forms';
@@ -169,32 +242,57 @@ export function uniqueEmailValidator(service: UserService): AsyncValidatorFn {
 
 ## Testing de Validators
 
-Todos los validators personalizados incluyen tests con **Jasmine + Angular TestBed**.
+Todos los validators personalizados incluyen tests. Como los validators usan el patrón factory, se llaman primero para obtener la función y luego se ejecutan con el control.
 
 ```ts
+// no-spaces.validator.spec.ts
 import { FormControl } from '@angular/forms';
 import { noSpacesValidator } from './no-spaces.validator';
 
 describe('noSpacesValidator', () => {
   it('returns null when there are no spaces', () => {
-    const control = new FormControl<string>('hello');
-    expect(noSpacesValidator(control)).toBeNull();
+    const control = new FormControl<string>('validusername');
+    // noSpacesValidator() devuelve el ValidatorFn — luego se llama con el control
+    expect(noSpacesValidator()(control)).toBeNull();
   });
 
   it('returns error when value has spaces', () => {
-    const control = new FormControl<string>('hello world');
-    expect(noSpacesValidator(control)).toEqual({ noSpaces: true });
+    const control = new FormControl<string>('invalid username');
+    expect(noSpacesValidator()(control)).toEqual({ noSpaces: true });
+  });
+});
+```
+
+```ts
+// password-match.validator.spec.ts
+import { FormControl, FormGroup } from '@angular/forms';
+import { passwordMatchValidator } from './password-match.validator';
+
+describe('passwordMatchValidator', () => {
+  it('returns null when passwords match', () => {
+    const group = new FormGroup({
+      password:        new FormControl('secret123'),
+      confirmPassword: new FormControl('secret123'),
+    });
+    expect(passwordMatchValidator()(group)).toBeNull();
   });
 
-  it('returns null for empty string', () => {
-    const control = new FormControl<string>('');
-    expect(noSpacesValidator(control)).toBeNull();
+  it('returns error when passwords do not match', () => {
+    const group = new FormGroup({
+      password:        new FormControl('secret123'),
+      confirmPassword: new FormControl('different'),
+    });
+    expect(passwordMatchValidator()(group)).toEqual({ passwordMismatch: true });
   });
 });
 ```
 
 ```bash
+# Correr todos los tests
 ng test --watch=false
+
+# Correr un archivo específico
+ng test --watch=false --include="src/app/custom-validators/no-spaces.validator.spec.ts"
 ```
 
 ---
@@ -207,6 +305,17 @@ ng test --watch=false
 | Lenguaje        | TypeScript — strict mode     |
 | Testing         | Jasmine + Angular TestBed    |
 | Package manager | npm                          |
+
+---
+
+## Rutas
+
+| Ruta          | Componente                  | Topic    |
+| ------------- | --------------------------- | -------- |
+| `/`           | `HomeComponent`             | Home     |
+| `/reactive`   | `ReactiveComponent`         | Topic 01 |
+| `/template`   | `TemplateDrivenComponent`   | Topic 02 |
+| `/validators` | `CustomValidatorsComponent` | Topic 03 |
 
 ---
 
@@ -226,21 +335,41 @@ ng test --watch=false
 ng build
 ```
 
+> Todos los comandos se ejecutan desde `angularApp/`.
+
 ---
 
 ## Estructura del proyecto
 
 ```
 angularApp/src/app/
-├── app.ts                        # Componente raíz
-├── app.config.ts                 # Configuración standalone
-├── app.routes.ts                 # Rutas de la aplicación
-└── [feature]/
-    ├── feature.component.ts      # Lógica del componente
-    ├── feature.component.html    # Template
-    ├── feature.component.scss    # Estilos
-    ├── feature.validator.ts      # Validator personalizado
-    └── feature.validator.spec.ts # Tests del validator
+├── app.ts                              # Componente raíz — navegación + router-outlet
+├── app.html                            # Template raíz — navbar
+├── app.routes.ts                       # Rutas de la aplicación
+├── app.config.ts                       # Configuración standalone (provideRouter, etc.)
+│
+├── home/
+│   └── home.component.ts/.html/.scss   # Página principal con cards de topics
+│
+├── reactive/
+│   └── reactive.component.*            # Topic 01 — Reactive Forms
+│
+├── template-driven/
+│   └── template-driven.component.*     # Topic 02 — Template-driven Forms
+│
+├── custom-validators/
+│   ├── custom-validators.component.*   # Topic 03 — Custom Validators (página educativa)
+│   ├── no-spaces.validator.ts          # Simple validator
+│   ├── no-spaces.validator.spec.ts
+│   ├── min-age.validator.ts            # Factory validator
+│   ├── min-age.validator.spec.ts
+│   ├── password-match.validator.ts     # Cross-field validator
+│   └── password-match.validator.spec.ts
+│
+└── shared/
+    └── components/
+        └── error-message/
+            └── error-message.component.*  # Componente reutilizable de mensajes de error
 ```
 
 ---

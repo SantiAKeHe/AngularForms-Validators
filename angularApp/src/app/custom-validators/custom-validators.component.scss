@@ -1,10 +1,120 @@
+/* ── Validator block separator ───────────────────────────────────────────── */
+
 .validator-block {
   margin-bottom: 3rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid #e2e8f0;
 }
+
+.validator-block:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+/* ── Validator header (badge + title + description) ──────────────────────── */
+
+.validator-header {
+  margin-bottom: 1.5rem;
+}
+
+.validator-header h2 {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0.5rem 0 0;
+  letter-spacing: -0.02em;
+}
+
+.validator-type-badge {
+  display: inline-block;
+  padding: 0.2rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.badge--simple     { background: #eff6ff; color: #1d4ed8; }
+.badge--factory    { background: #fff7ed; color: #c2410c; }
+.badge--crossfield { background: #f5f3ff; color: #6d28d9; }
 
 .validator-desc {
   color: #64748b;
   font-size: 0.875rem;
-  margin-bottom: 1.25rem;
-  line-height: 1.6;
+  margin-top: 0.6rem;
+  line-height: 1.65;
+}
+
+/* ── Two-column layout (code | demo) ─────────────────────────────────────── */
+
+.validator-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* ── Code panel ──────────────────────────────────────────────────────────── */
+
+.code-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+.code-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-top: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.code-label:first-child {
+  margin-top: 0;
+}
+
+.code-block {
+  background: #1e293b;
+  color: #e2e8f0;
+  font-family: 'Consolas', 'Fira Code', monospace;
+  font-size: 0.78rem;
+  line-height: 1.7;
+  padding: 1rem 1.25rem;
+  border-radius: 8px;
+  white-space: pre;
+  overflow-x: auto;
+  border-left: 3px solid #6366f1;
+  margin: 0;
+}
+
+.code-block code {
+  font-family: inherit;
+}
+
+/* ── Demo area ───────────────────────────────────────────────────────────── */
+
+.demo-area {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.demo-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .validator-content {
+    grid-template-columns: 1fr;
+  }
 }
