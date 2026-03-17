@@ -4,6 +4,7 @@ import { ReactiveComponent } from './reactive/reactive.component';
 import { TemplateDrivenComponent } from './template-driven/template-driven.component';
 import { CustomValidatorsComponent } from './custom-validators/custom-validators.component';
 import { DynamicFormsComponent } from './dynamic-forms/dynamic-forms.component';
+import { ErrorMessagesComponent } from './error-messages/error-messages.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -11,4 +12,5 @@ export const routes: Routes = [
   { path: 'template', component: TemplateDrivenComponent },
   { path: 'validators', component: CustomValidatorsComponent },
   { path: 'dynamic', component: DynamicFormsComponent },
+  { path: 'errors', component: ErrorMessagesComponent },
 ];

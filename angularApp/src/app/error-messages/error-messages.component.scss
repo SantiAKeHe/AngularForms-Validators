@@ -1,0 +1,121 @@
+.section {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1.5rem;
+}
+
+.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 2rem;
+}
+
+.demo-block {
+  background: var(--card-bg, #1a1a2e);
+  border: 1px solid var(--card-border, #2a2a4a);
+  border-radius: 12px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+}
+
+.demo-heading {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.demo-description {
+  color: var(--text-muted, #8888aa);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}
+
+.demo-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.demo-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+
+  label {
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  input {
+    padding: 0.5rem 0.75rem;
+    border-radius: 6px;
+    border: 1px solid var(--input-border, #3a3a5a);
+    background: var(--input-bg, #111128);
+    color: inherit;
+    font-size: 1rem;
+
+    &:focus {
+      outline: 2px solid var(--accent, #7702ff);
+      outline-offset: 1px;
+    }
+  }
+}
+
+.inline-error {
+  font-size: 0.8rem;
+  color: var(--error-color, #f87171);
+}
+
+.playground {
+  background: var(--playground-bg, #0d0d1f);
+  border: 1px solid var(--card-border, #2a2a4a);
+  border-radius: 8px;
+  padding: 1rem;
+}
+
+.playground-heading {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #8888aa);
+  margin-bottom: 0.75rem;
+}
+
+.playground-state {
+  font-size: 0.8rem;
+  color: var(--text-muted, #aaaacc);
+  margin: 0 0 0.5rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.showon-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.showon-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.showon-label {
+  font-size: 0.875rem;
+  color: var(--text-muted, #8888aa);
+  font-style: italic;
+}
