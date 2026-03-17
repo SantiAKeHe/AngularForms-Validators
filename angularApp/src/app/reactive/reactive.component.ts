@@ -2,6 +2,8 @@ import { Component, inject, signal } from '@angular/core';
 import { JsonPipe } from '@angular/common';
 import { FormBuilder, FormControl, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ErrorMessageComponent } from '../shared/components/error-message/error-message.component';
+import { noSpacesValidator } from '../custom-validators/no-spaces.validator';
+import { minAgeValidator } from '../custom-validators/min-age.validator';
 
 interface RegistrationFormValue {
   name: string;
@@ -21,7 +23,7 @@ export class ReactiveComponent {
 
   form = this.fb.group({
     name: this.fb.nonNullable.control<string>('', {
-      validators: [Validators.required],
+      validators: [Validators.required, noSpacesValidator()],
       updateOn: 'blur',
     }),
     email: this.fb.nonNullable.control<string>('', {
@@ -29,7 +31,7 @@ export class ReactiveComponent {
       updateOn: 'blur',
     }),
     age: this.fb.control<number | null>(null, {
-      validators: [Validators.required, Validators.min(18)],
+      validators: [Validators.required, minAgeValidator(18)],
       updateOn: 'blur',
     }),
   });

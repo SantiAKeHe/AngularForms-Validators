@@ -1,0 +1,211 @@
+<section class="page" id="custom-validators">
+  <span class="section-badge badge--validator">Topic 03</span>
+  <h1 class="page-title">Custom Validators</h1>
+  <p class="page-subtitle">
+    Three types of custom validators in Angular 19: simple, factory (with parameters),
+    and cross-field. Each block shows the validator source code and a live demo form.
+  </p>
+
+  <!-- ── Validator 1 — Simple ─────────────────────────────────────────────── -->
+  <div class="validator-block">
+    <div class="validator-header">
+      <span class="validator-type-badge badge--simple">Simple Validator</span>
+      <h2>noSpacesValidator</h2>
+      <p class="validator-desc">
+        A single-responsibility validator: it checks whether the field value contains
+        spaces and returns <code>&#123; noSpaces: true &#125;</code> when it does.
+        Applied directly to a <code>FormControl</code> alongside built-in validators.
+      </p>
+    </div>
+
+    <div class="validator-content">
+      <!-- Source code -->
+      <div class="code-panel">
+        <p class="code-label">no-spaces.validator.ts</p>
+        <pre class="code-block"><code>export function noSpacesValidator(): ValidatorFn &#123;
+  return (control: AbstractControl): ValidationErrors | null =&gt; &#123;
+    const hasSpaces = (control.value as string)?.includes(' ');
+    return hasSpaces ? &#123; noSpaces: true &#125; : null;
+  &#125;;
+&#125;</code></pre>
+
+        <p class="code-label">Apply to a FormControl</p>
+        <pre class="code-block"><code>username: this.fb.control&lt;string&gt;('', [
+  Validators.required,
+  noSpacesValidator()
+])</code></pre>
+      </div>
+
+      <!-- Live demo -->
+      <div class="demo-area">
+        <div class="form-wrapper">
+          <p class="demo-label">Live Demo</p>
+          <form [formGroup]="noSpacesForm">
+            <div class="form-group">
+              <label for="username">Username</label>
+              <input
+                id="username"
+                type="text"
+                formControlName="username"
+                [attr.aria-invalid]="username.invalid && username.touched ? true : null"
+                placeholder="e.g. jane_doe"
+              />
+              <app-error-message [control]="username" />
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <p class="playground-label">Live State</p>
+          <pre class="playground-state">Value:  {{ noSpacesForm.value | json }}</pre>
+          <pre class="playground-state">Status: {{ noSpacesForm.status }}</pre>
+          <pre class="playground-state">Errors: {{ username.errors | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Validator 2 — Factory ─────────────────────────────────────────────── -->
+  <div class="validator-block">
+    <div class="validator-header">
+      <span class="validator-type-badge badge--factory">Factory Validator</span>
+      <h2>minAgeValidator(minAge)</h2>
+      <p class="validator-desc">
+        A validator factory — a function that accepts a parameter and returns a
+        <code>ValidatorFn</code>. Use this pattern whenever the rule depends on a
+        configurable value. Returns
+        <code>&#123; minAge: &#123; required, actual &#125; &#125;</code> when validation fails.
+      </p>
+    </div>
+
+    <div class="validator-content">
+      <!-- Source code -->
+      <div class="code-panel">
+        <p class="code-label">min-age.validator.ts</p>
+        <pre class="code-block"><code>export function minAgeValidator(minAge: number): ValidatorFn &#123;
+  return (control: AbstractControl): ValidationErrors | null =&gt; &#123;
+    const age = control.value as number;
+    return age &lt; minAge
+      ? &#123; minAge: &#123; required: minAge, actual: age &#125; &#125;
+      : null;
+  &#125;;
+&#125;</code></pre>
+
+        <p class="code-label">Apply with a parameter</p>
+        <pre class="code-block"><code>age: this.fb.control&lt;number | null&gt;(null, [
+  Validators.required,
+  minAgeValidator(18)
+])</code></pre>
+      </div>
+
+      <!-- Live demo -->
+      <div class="demo-area">
+        <div class="form-wrapper">
+          <p class="demo-label">Live Demo</p>
+          <form [formGroup]="minAgeForm">
+            <div class="form-group">
+              <label for="age">Age</label>
+              <input
+                id="age"
+                type="number"
+                formControlName="age"
+                [attr.aria-invalid]="age.invalid && age.touched ? true : null"
+                placeholder="e.g. 25"
+              />
+              <app-error-message [control]="age" />
+            </div>
+          </form>
+        </div>
+
+        <div>
+          <p class="playground-label">Live State</p>
+          <pre class="playground-state">Value:   {{ minAgeForm.value | json }}</pre>
+          <pre class="playground-state">Minimum: 18</pre>
+          <pre class="playground-state">Actual:  {{ age.value }}</pre>
+          <pre class="playground-state">Status:  {{ minAgeForm.status }}</pre>
+          <pre class="playground-state">Errors:  {{ age.errors | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Validator 3 — Cross-field ─────────────────────────────────────────── -->
+  <div class="validator-block">
+    <div class="validator-header">
+      <span class="validator-type-badge badge--crossfield">Cross-field Validator</span>
+      <h2>passwordMatchValidator</h2>
+      <p class="validator-desc">
+        A cross-field validator is applied at <code>FormGroup</code> level, not on a
+        single control. It has access to all sibling controls and can compare them.
+        Returns <code>&#123; passwordMismatch: true &#125;</code> when the two fields differ.
+      </p>
+    </div>
+
+    <div class="validator-content">
+      <!-- Source code -->
+      <div class="code-panel">
+        <p class="code-label">password-match.validator.ts</p>
+        <pre class="code-block"><code>export function passwordMatchValidator(): ValidatorFn &#123;
+  return (group: AbstractControl): ValidationErrors | null =&gt; &#123;
+    const fg      = group as FormGroup;
+    const pass    = fg.controls['password'].value;
+    const confirm = fg.controls['confirmPassword'].value;
+    return pass !== confirm ? &#123; passwordMismatch: true &#125; : null;
+  &#125;;
+&#125;</code></pre>
+
+        <p class="code-label">Apply at FormGroup level</p>
+        <pre class="code-block"><code>this.fb.group(
+  &#123;
+    password:        this.fb.control&lt;string&gt;('', Validators.required),
+    confirmPassword: this.fb.control&lt;string&gt;('', Validators.required),
+  &#125;,
+  &#123; validators: passwordMatchValidator() &#125;
+)</code></pre>
+      </div>
+
+      <!-- Live demo -->
+      <div class="demo-area">
+        <div class="form-wrapper">
+          <p class="demo-label">Live Demo</p>
+          <form [formGroup]="passwordForm">
+            <div class="form-group">
+              <label for="password">Password</label>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                [attr.aria-invalid]="password.invalid && password.touched ? true : null"
+                placeholder="Enter password"
+              />
+              <app-error-message [control]="password" />
+            </div>
+
+            <div class="form-group">
+              <label for="confirmPassword">Confirm Password</label>
+              <input
+                id="confirmPassword"
+                type="password"
+                formControlName="confirmPassword"
+                [attr.aria-invalid]="confirmPassword.invalid && confirmPassword.touched ? true : null"
+                placeholder="Repeat password"
+              />
+              <app-error-message [control]="confirmPassword" />
+            </div>
+
+            @if (passwordForm.hasError('passwordMismatch') && confirmPassword.touched) {
+              <div class="alert alert--error">Passwords do not match.</div>
+            }
+          </form>
+        </div>
+
+        <div>
+          <p class="playground-label">Live State</p>
+          <pre class="playground-state">Values:   {{ passwordForm.value | json }}</pre>
+          <pre class="playground-state">Status:   {{ passwordForm.status }}</pre>
+          <pre class="playground-state">Mismatch: {{ passwordForm.hasError('passwordMismatch') }}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
