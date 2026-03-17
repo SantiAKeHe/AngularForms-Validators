@@ -1,6 +1,6 @@
 <!-- ══ NAVIGATION ══════════════════════════════════════════════════════════ -->
 <nav>
-  <a class="brand" href="#" aria-label="Angular Forms & Validators home">
+  <a class="brand" routerLink="/" aria-label="Angular Forms & Validators home">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 250 239" fill="none" aria-hidden="true">
       <g clip-path="url(#nc)">
         <path fill="url(#ng)" d="M222.077 39.192l-8.019 125.923L137.387 0l84.69 39.192Zm-53.105 162.825-57.933 33.056-57.934-33.056 11.783-28.556h92.301l11.783 28.556ZM111.039 62.675l30.357 73.803H80.681l30.358-73.803ZM7.937 165.115 0 39.192 84.69 0 7.937 165.115Z"/>
@@ -15,50 +15,11 @@
     Angular Forms &amp; Validators
   </a>
 
-  <a href="#reactive">Reactive Forms</a>
-  <a href="#template">Template-driven</a>
-  <a href="#validators">Custom Validators</a>
-  <a href="#dynamic">Dynamic Forms</a>
-  <a href="#errors">Error Messages</a>
+  <a routerLink="/reactive">Reactive Forms</a>
+  <a routerLink="/template">Template-driven</a>
+  <a routerLink="/validators">Custom Validators</a>
+  <a routerLink="/dynamic">Dynamic Forms</a>
+  <a routerLink="/errors">Error Messages</a>
 </nav>
-
-<!-- ══ HOME PAGE ═══════════════════════════════════════════════════════════ -->
-<div class="page">
-
-  <h1 class="page-title">{{ title() }}</h1>
-  <p class="page-subtitle">
-    Educational app — Angular 19 &nbsp;·&nbsp; Reactive Forms &nbsp;·&nbsp; Custom Validators &nbsp;·&nbsp; TypeScript Strict
-  </p>
-
-  <!-- Topic cards grid -->
-  <div class="topics-grid">
-    @for (card of topicCards; track card.tag) {
-      <div class="form-wrapper topic-card" [class]="card.cardClass">
-        <span class="badge" [class]="card.badgeClass">{{ card.tag }}</span>
-        <h2>{{ card.icon }} {{ card.title }}</h2>
-        <p>{{ card.description }}</p>
-        <ul>
-          @for (point of card.points; track point) {
-            <li>{{ point }}</li>
-          }
-        </ul>
-      </div>
-    }
-  </div>
-
-  <!-- Info panel -->
-  <div class="info-panel">
-    <strong>📦 Stack:</strong>
-    &nbsp;
-    <code>FormBuilder</code> — typed reactive forms &nbsp;·&nbsp;
-    <code>ValidatorFn</code> — custom validators &nbsp;·&nbsp;
-    <code>FormArray</code> — dynamic forms &nbsp;·&nbsp;
-    <code>error-message</code> — shared error component &nbsp;·&nbsp;
-    <code>Kendo UI</code> — Angular 19 UI library
-  </div>
-
-</div>
-
-<app-reactive />
 
 <router-outlet />
