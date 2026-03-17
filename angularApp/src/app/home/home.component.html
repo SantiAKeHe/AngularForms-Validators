@@ -1,0 +1,35 @@
+<div class="page">
+
+  <h1 class="page-title">{{ title() }}</h1>
+  <p class="page-subtitle">
+    Educational app — Angular 19 &nbsp;·&nbsp; Reactive Forms &nbsp;·&nbsp; Custom Validators &nbsp;·&nbsp; TypeScript Strict
+  </p>
+
+  <!-- Topic cards grid -->
+  <div class="topics-grid">
+    @for (card of topicCards; track card.tag) {
+      <a class="form-wrapper topic-card" [class]="card.cardClass" [routerLink]="card.route">
+        <span class="badge" [class]="card.badgeClass">{{ card.tag }}</span>
+        <h2>{{ card.icon }} {{ card.title }}</h2>
+        <p>{{ card.description }}</p>
+        <ul>
+          @for (point of card.points; track point) {
+            <li>{{ point }}</li>
+          }
+        </ul>
+      </a>
+    }
+  </div>
+
+  <!-- Info panel -->
+  <div class="info-panel">
+    <strong>📦 Stack:</strong>
+    &nbsp;
+    <code>FormBuilder</code> — typed reactive forms &nbsp;·&nbsp;
+    <code>ValidatorFn</code> — custom validators &nbsp;·&nbsp;
+    <code>FormArray</code> — dynamic forms &nbsp;·&nbsp;
+    <code>error-message</code> — shared error component &nbsp;·&nbsp;
+    <code>Kendo UI</code> — Angular 19 UI library
+  </div>
+
+</div>

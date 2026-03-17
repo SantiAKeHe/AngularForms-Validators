@@ -1,0 +1,73 @@
+<section class="page" id="reactive">
+  <span class="section-badge badge--reactive">Topic 01</span>
+  <h1 class="page-title">Reactive Forms</h1>
+  <p class="page-subtitle">
+    Build complex forms with full TypeScript type safety using
+    <code>FormBuilder</code> and typed <code>FormControl</code>s.
+  </p>
+
+  <div class="demo-grid">
+
+    <!-- ── Form ───────────────────────────────────────────────────────── -->
+    <div class="form-wrapper">
+      <h2>Registration Form</h2>
+
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            id="name"
+            type="text"
+            formControlName="name"
+            [attr.aria-invalid]="name.invalid && name.touched ? true : null"
+            placeholder="Jane Doe"
+          />
+          <app-error-message [control]="name" />
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            [attr.aria-invalid]="email.invalid && email.touched ? true : null"
+            placeholder="jane@example.com"
+          />
+          <app-error-message [control]="email" />
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input
+            id="age"
+            type="number"
+            formControlName="age"
+            [attr.aria-invalid]="age.invalid && age.touched ? true : null"
+            placeholder="18"
+          />
+          <app-error-message [control]="age" />
+        </div>
+
+        <button type="submit" [disabled]="form.invalid">Submit</button>
+
+      </form>
+
+      @if (submittedValues()) {
+        <div class="alert alert--success" style="margin-top: 1.25rem">
+          <strong>Submitted values:</strong>
+          <pre style="margin-top: 0.5rem; background: transparent; color: inherit; padding: 0; font-size: 0.85rem">{{ submittedValues() | json }}</pre>
+        </div>
+      }
+    </div>
+
+    <!-- ── Playground ─────────────────────────────────────────────────── -->
+    <div>
+      <p class="playground-label">Live Form State</p>
+      <pre class="playground-state">{{ form.value | json }}</pre>
+      <pre class="playground-state">Status: {{ form.status }}</pre>
+    </div>
+
+  </div>
+</section>
