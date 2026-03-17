@@ -1,0 +1,128 @@
+<section class="page" id="custom-validators">
+  <span class="section-badge badge--validator">Topic 03</span>
+  <h1 class="page-title">Custom Validators</h1>
+  <p class="page-subtitle">
+    Learn how to build the three types of custom validators in Angular 19:
+    simple validators, factory validators (with parameters), and cross-field validators.
+  </p>
+
+  <!-- ── Form 1 — Simple validator ──────────────────────────────────────── -->
+  <div class="validator-block">
+    <div class="demo-grid">
+      <div class="form-wrapper">
+        <h2>Simple Validator — <code>noSpacesValidator</code></h2>
+        <p class="validator-desc">
+          Returns <code>noSpaces: true</code> if the value contains any spaces.
+          Applied directly on a single <code>FormControl</code>.
+        </p>
+
+        <form [formGroup]="noSpacesForm">
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input
+              id="username"
+              type="text"
+              formControlName="username"
+              [attr.aria-invalid]="username.invalid && username.touched ? true : null"
+              placeholder="e.g. jane_doe"
+            />
+            <app-error-message [control]="username" />
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <p class="playground-label">Live State</p>
+        <pre class="playground-state">Value:  {{ noSpacesForm.value | json }}</pre>
+        <pre class="playground-state">Status: {{ noSpacesForm.status }}</pre>
+        <pre class="playground-state">Errors: {{ username.errors | json }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form 2 — Factory validator ─────────────────────────────────────── -->
+  <div class="validator-block">
+    <div class="demo-grid">
+      <div class="form-wrapper">
+        <h2>Factory Validator — <code>minAgeValidator(18)</code></h2>
+        <p class="validator-desc">
+          A validator factory that accepts a parameter. Returns
+          <code>minAge: &lbrace; required, actual &rbrace;</code> when the value is below the minimum.
+        </p>
+
+        <form [formGroup]="minAgeForm">
+          <div class="form-group">
+            <label for="age">Age</label>
+            <input
+              id="age"
+              type="number"
+              formControlName="age"
+              [attr.aria-invalid]="age.invalid && age.touched ? true : null"
+              placeholder="e.g. 25"
+            />
+            <app-error-message [control]="age" />
+          </div>
+        </form>
+      </div>
+
+      <div>
+        <p class="playground-label">Live State</p>
+        <pre class="playground-state">Value:   {{ minAgeForm.value | json }}</pre>
+        <pre class="playground-state">Minimum: 18</pre>
+        <pre class="playground-state">Actual:  {{ age.value }}</pre>
+        <pre class="playground-state">Status:  {{ minAgeForm.status }}</pre>
+        <pre class="playground-state">Errors:  {{ age.errors | json }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Form 3 — Cross-field validator ─────────────────────────────────── -->
+  <div class="validator-block">
+    <div class="demo-grid">
+      <div class="form-wrapper">
+        <h2>Cross-field Validator — <code>passwordMatchValidator</code></h2>
+        <p class="validator-desc">
+          Applied at the <code>FormGroup</code> level. Returns
+          <code>passwordMismatch: true</code> when the two fields do not match.
+        </p>
+
+        <form [formGroup]="passwordForm">
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              id="password"
+              type="password"
+              formControlName="password"
+              [attr.aria-invalid]="password.invalid && password.touched ? true : null"
+              placeholder="Enter password"
+            />
+            <app-error-message [control]="password" />
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirm Password</label>
+            <input
+              id="confirmPassword"
+              type="password"
+              formControlName="confirmPassword"
+              [attr.aria-invalid]="confirmPassword.invalid && confirmPassword.touched ? true : null"
+              placeholder="Repeat password"
+            />
+            <app-error-message [control]="confirmPassword" />
+          </div>
+
+          @if (passwordForm.hasError('passwordMismatch') && confirmPassword.touched) {
+            <div class="alert alert--error">Passwords do not match.</div>
+          }
+        </form>
+      </div>
+
+      <div>
+        <p class="playground-label">Live State</p>
+        <pre class="playground-state">Values:  {{ passwordForm.value | json }}</pre>
+        <pre class="playground-state">Status:  {{ passwordForm.status }}</pre>
+        <pre class="playground-state">Mismatch: {{ passwordForm.hasError('passwordMismatch') }}</pre>
+      </div>
+    </div>
+  </div>
+</section>

@@ -8,7 +8,8 @@ const ERROR_MESSAGES: Record<string, string> = {
   minlength: 'Value is too short',
   maxlength: 'Value is too long',
   min: 'Value is below the minimum allowed',
-  noSpaces: 'Spaces are not allowed',
+  noSpaces: 'No spaces allowed',
+  minAge: 'You must be at least 18 years old',
   passwordMismatch: 'Passwords do not match',
 };
 
