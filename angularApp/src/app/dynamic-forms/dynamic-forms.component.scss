@@ -1,0 +1,119 @@
+.demo-section {
+  margin-bottom: 2rem;
+}
+
+// ── Participant row ─────────────────────────────────────────────────────────
+
+.participant-row {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 1rem;
+  border: 1.5px solid #e2e8f0;
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.participant-fields {
+  display: grid;
+  grid-template-columns: 1fr 120px;
+  gap: 0.75rem;
+  flex: 1;
+}
+
+.btn--remove {
+  margin-top: 1.6rem; // align with input (below label)
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+// ── Form actions ────────────────────────────────────────────────────────────
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+// ── Step indicator ──────────────────────────────────────────────────────────
+
+.step-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin-bottom: 1.75rem;
+}
+
+.step-dot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.875rem;
+  border: 2px solid #cbd5e1;
+  color: #94a3b8;
+  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.step-dot--active {
+  background: #9333ea;
+  border-color: #9333ea;
+  color: #fff;
+}
+
+.step-dot--done {
+  background: #f3e8ff;
+  border-color: #9333ea;
+  color: #9333ea;
+}
+
+.step-connector {
+  height: 2px;
+  width: 2.5rem;
+  background: #e2e8f0;
+  transition: background 0.2s;
+}
+
+.step-connector--done {
+  background: #9333ea;
+}
+
+.step-label {
+  margin-left: 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+}
+
+// ── Wizard navigation ───────────────────────────────────────────────────────
+
+.wizard-nav {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+// ── Submitted result ────────────────────────────────────────────────────────
+
+.submitted-result {
+  margin-top: 1.25rem;
+
+  pre {
+    margin-top: 0.5rem;
+    font-family: 'Consolas', monospace;
+    font-size: 0.8rem;
+    white-space: pre-wrap;
+  }
+}
+
+// ── Disabled buttons ────────────────────────────────────────────────────────
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
