@@ -22,9 +22,12 @@ const ERROR_MESSAGES: Record<string, string> = {
 })
 export class ErrorMessageComponent {
   @Input() control!: AbstractControl;
+  @Input() showOn: 'touched' | 'dirty' | 'always' = 'touched';
 
   get errorMessage(): string | null {
-    if (!this.control.errors || !this.control.touched) return null;
+    if (!this.control.errors) return null;
+    if (this.showOn === 'touched' && !this.control.touched) return null;
+    if (this.showOn === 'dirty' && !this.control.dirty) return null;
     const firstKey = Object.keys(this.control.errors)[0];
     return ERROR_MESSAGES[firstKey] ?? 'Invalid value';
   }

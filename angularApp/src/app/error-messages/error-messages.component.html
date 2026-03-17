@@ -1,0 +1,120 @@
+<section class="section">
+  <h1 class="section-title">Error Messages Best Practices</h1>
+
+  <!-- ══ DEMO 1 — Bad pattern: inline errors ══════════════════════════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">Bad pattern — inline errors repeated per field</h2>
+    <p class="demo-description">
+      Inline error logic is scattered across every field. Changing the message
+      or condition means editing every template where that field appears.
+    </p>
+
+    <div class="demo-layout">
+      <form [formGroup]="formDemo1" class="demo-form">
+        <div class="field">
+          <label for="email-d1">Email</label>
+          <input id="email-d1" type="email" formControlName="email" />
+          @if (emailDemo1.invalid && emailDemo1.touched) {
+            @if (emailDemo1.hasError('required')) {
+              <span class="inline-error">This field is required</span>
+            }
+            @if (emailDemo1.hasError('email')) {
+              <span class="inline-error">Enter a valid email address</span>
+            }
+          }
+        </div>
+
+        <div class="field">
+          <label for="password-d1">Password</label>
+          <input id="password-d1" type="password" formControlName="password" />
+          @if (passwordDemo1.invalid && passwordDemo1.touched) {
+            @if (passwordDemo1.hasError('required')) {
+              <span class="inline-error">This field is required</span>
+            }
+          }
+        </div>
+      </form>
+
+      <div class="playground">
+        <h3 class="playground-heading">Playground</h3>
+        <pre class="playground-state">{{ formDemo1.value | json }}</pre>
+        <pre class="playground-state">Status: {{ formDemo1.status }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DEMO 2 — Good pattern: reusable error-message component ══════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">Good pattern — centralized error component</h2>
+    <p class="demo-description">
+      The same form, the same validators — but error display is delegated to
+      <code>&lt;app-error-message&gt;</code>. Messages live in one place and
+      the template stays lean.
+    </p>
+
+    <div class="demo-layout">
+      <form [formGroup]="formDemo2" class="demo-form">
+        <div class="field">
+          <label for="email-d2">Email</label>
+          <input id="email-d2" type="email" formControlName="email" />
+          <app-error-message [control]="emailDemo2" />
+        </div>
+
+        <div class="field">
+          <label for="password-d2">Password</label>
+          <input id="password-d2" type="password" formControlName="password" />
+          <app-error-message [control]="passwordDemo2" />
+        </div>
+      </form>
+
+      <div class="playground">
+        <h3 class="playground-heading">Playground</h3>
+        <pre class="playground-state">{{ formDemo2.value | json }}</pre>
+        <pre class="playground-state">Status: {{ formDemo2.status }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DEMO 3 — Controlling when errors appear: showOn ══════════════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">Controlling when errors appear: showOn</h2>
+    <p class="demo-description">
+      The same control, three different trigger strategies. Type or leave the
+      field to see each mode activate at a different moment.
+    </p>
+
+    <div class="demo-layout">
+      <form [formGroup]="formDemo3" class="demo-form">
+        <div class="field">
+          <label for="username-d3">Username (required, no spaces)</label>
+          <input id="username-d3" type="text" formControlName="username" />
+        </div>
+
+        <div class="showon-list">
+          <div class="showon-item">
+            <span class="showon-label">touched — shows after the user visits the field</span>
+            <app-error-message [control]="username" showOn="touched" />
+          </div>
+
+          <div class="showon-item">
+            <span class="showon-label">dirty — shows after the user changes the value</span>
+            <app-error-message [control]="username" showOn="dirty" />
+          </div>
+
+          <div class="showon-item">
+            <span class="showon-label">always — shows immediately on load</span>
+            <app-error-message [control]="username" showOn="always" />
+          </div>
+        </div>
+      </form>
+
+      <div class="playground">
+        <h3 class="playground-heading">Playground</h3>
+        <pre class="playground-state">Value: {{ username.value }}</pre>
+        <pre class="playground-state">Touched: {{ username.touched }}</pre>
+        <pre class="playground-state">Dirty: {{ username.dirty }}</pre>
+        <pre class="playground-state">Errors: {{ username.errors | json }}</pre>
+      </div>
+    </div>
+  </div>
+</section>
