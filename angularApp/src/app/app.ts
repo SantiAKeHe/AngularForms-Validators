@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ReactiveComponent } from './reactive/reactive.component';
 
 interface TopicCard {
   tag: string;
@@ -13,7 +14,7 @@ interface TopicCard {
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, ReactiveComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })
