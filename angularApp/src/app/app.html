@@ -1,11 +1,4 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<!-- Angular Forms & Validators — Home Page -->
 
 <style>
   :host {
@@ -182,6 +175,12 @@
   }
 </style>
 
+<nav class="app-nav">
+  @for (topic of topics; track topic) {
+    <button kendoButton fillMode="flat" class="nav-topic">{{ topic }}</button>
+  }
+</nav>
+
 <main class="main">
   <div class="content">
     <div class="left-side">
@@ -230,8 +229,8 @@
           <clipPath id="a"><path fill="#fff" d="M0 0h982v239H0z" /></clipPath>
         </defs>
       </svg>
-      <h1>Hello, {{ title() }}</h1>
-      <p>Congratulations! Your app is running. 🎉</p>
+      <h1>{{ title() }}</h1>
+      <p>Educational app for Angular Reactive Forms and Custom Validators.</p>
     </div>
     <div class="divider" role="separator" aria-label="Divider"></div>
     <div class="right-side">
@@ -330,13 +329,39 @@
   </div>
 </main>
 
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content above * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced.  * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * End of Placeholder  * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
+<section class="kendo-playground">
+  <h2 class="playground-title">Kendo UI for Angular — Library Validation</h2>
 
+  <div class="playground-block">
+    <h3>Buttons</h3>
+    <div class="kendo-demo-row">
+      <button kendoButton themeColor="primary">Primary</button>
+      <button kendoButton themeColor="secondary">Secondary</button>
+      <button kendoButton themeColor="info">Info</button>
+      <button kendoButton themeColor="success">Success</button>
+      <button kendoButton themeColor="warning">Warning</button>
+      <button kendoButton themeColor="error">Error</button>
+    </div>
+  </div>
+
+  <div class="playground-block">
+    <h3>Fill Modes</h3>
+    <div class="kendo-demo-row">
+      <button kendoButton fillMode="solid" themeColor="primary">Solid</button>
+      <button kendoButton fillMode="outline" themeColor="primary">Outline</button>
+      <button kendoButton fillMode="flat" themeColor="primary">Flat</button>
+      <button kendoButton fillMode="link" themeColor="primary">Link</button>
+    </div>
+  </div>
+
+  <div class="playground-block">
+    <h3>Topics — Chip List</h3>
+    <kendo-chiplist>
+      @for (topic of topics; track topic) {
+        <kendo-chip [label]="topic" />
+      }
+    </kendo-chiplist>
+  </div>
+</section>
 
 <router-outlet />
