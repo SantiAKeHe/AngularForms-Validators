@@ -1,0 +1,240 @@
+<div class="page">
+  <span class="section-badge badge--dynamic">Dynamic Forms</span>
+  <h1 class="page-title">Dynamic Forms &amp; Wizards</h1>
+  <p class="page-subtitle">
+    Learn how to manage dynamic lists with <code>FormArray</code> and split complex forms
+    into multi-step wizards with per-step validation.
+  </p>
+
+  <!-- ── Demo 1 — FormArray ──────────────────────────────────────────────── -->
+  <section class="demo-section">
+    <div class="form-wrapper">
+      <h2>Demo 1 — FormArray: Dynamic Participant List</h2>
+
+      <div class="demo-grid">
+        <!-- Form -->
+        <div>
+          <form [formGroup]="participantsForm" (ngSubmit)="onSubmitParticipants()">
+            <div formArrayName="participants">
+              @for (control of participants.controls; track $index) {
+                <div [formGroupName]="$index" class="participant-row">
+                  <div class="participant-fields">
+                    <div class="form-group">
+                      <label>Name</label>
+                      <input
+                        formControlName="name"
+                        type="text"
+                        placeholder="Full name"
+                        [attr.aria-invalid]="
+                          participantControl($index, 'name').invalid &&
+                          participantControl($index, 'name').touched
+                        "
+                      />
+                      <app-error-message [control]="participantControl($index, 'name')" />
+                    </div>
+
+                    <div class="form-group">
+                      <label>Age</label>
+                      <input
+                        formControlName="age"
+                        type="number"
+                        placeholder="18+"
+                        [attr.aria-invalid]="
+                          participantControl($index, 'age').invalid &&
+                          participantControl($index, 'age').touched
+                        "
+                      />
+                      <app-error-message [control]="participantControl($index, 'age')" />
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    class="btn btn--outline btn--remove"
+                    (click)="removeParticipant($index)"
+                    [disabled]="participants.length === 1"
+                  >
+                    Remove
+                  </button>
+                </div>
+              }
+            </div>
+
+            <div class="form-actions">
+              <button type="button" class="btn btn--outline" (click)="addParticipant()">
+                + Add participant
+              </button>
+              <button type="submit" [disabled]="participantsForm.invalid">Submit</button>
+            </div>
+          </form>
+
+          @if (submittedParticipants) {
+            <div class="alert alert--success submitted-result">
+              <strong>Submitted values:</strong>
+              <pre>{{ submittedParticipants | json }}</pre>
+            </div>
+          }
+        </div>
+
+        <!-- Playground -->
+        <div>
+          <p class="playground-label">Live state</p>
+          <pre class="playground-state">{{ participantsForm.value | json }}</pre>
+          <pre class="playground-state">Status: {{ participantsForm.status }}</pre>
+          <pre class="playground-state">Participants: {{ participants.length }}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Demo 2 — Multi-step Wizard ─────────────────────────────────────── -->
+  <section class="demo-section">
+    <div class="form-wrapper">
+      <h2>Demo 2 — Multi-step Wizard</h2>
+
+      <!-- Step indicator -->
+      <div class="step-indicator">
+        @for (step of [1, 2, 3]; track step) {
+          <div
+            class="step-dot"
+            [class.step-dot--active]="currentStep === step"
+            [class.step-dot--done]="currentStep > step"
+          >
+            {{ step }}
+          </div>
+          @if (step < 3) {
+            <div class="step-connector" [class.step-connector--done]="currentStep > step"></div>
+          }
+        }
+        <span class="step-label">Step {{ currentStep }} of 3</span>
+      </div>
+
+      <div class="demo-grid">
+        <!-- Wizard form -->
+        <div [formGroup]="wizardForm">
+          <!-- Step 1 -->
+          @if (currentStep === 1) {
+            <div formGroupName="step1">
+              <div class="form-group">
+                <label>First Name</label>
+                <input
+                  formControlName="firstName"
+                  type="text"
+                  [attr.aria-invalid]="firstName.invalid && firstName.touched"
+                />
+                <app-error-message [control]="firstName" />
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input
+                  formControlName="lastName"
+                  type="text"
+                  [attr.aria-invalid]="lastName.invalid && lastName.touched"
+                />
+                <app-error-message [control]="lastName" />
+              </div>
+            </div>
+          }
+
+          <!-- Step 2 -->
+          @if (currentStep === 2) {
+            <div formGroupName="step2">
+              <div class="form-group">
+                <label>Email</label>
+                <input
+                  formControlName="email"
+                  type="email"
+                  [attr.aria-invalid]="email.invalid && email.touched"
+                />
+                <app-error-message [control]="email" />
+              </div>
+              <div class="form-group">
+                <label>Age</label>
+                <input
+                  formControlName="age"
+                  type="number"
+                  placeholder="18+"
+                  [attr.aria-invalid]="wizardAge.invalid && wizardAge.touched"
+                />
+                <app-error-message [control]="wizardAge" />
+              </div>
+            </div>
+          }
+
+          <!-- Step 3 -->
+          @if (currentStep === 3) {
+            <div formGroupName="step3">
+              <div class="form-group">
+                <label>Username</label>
+                <input
+                  formControlName="username"
+                  type="text"
+                  [attr.aria-invalid]="username.invalid && username.touched"
+                />
+                <app-error-message [control]="username" />
+              </div>
+              <div class="form-group">
+                <label>Password</label>
+                <input
+                  formControlName="password"
+                  type="password"
+                  [attr.aria-invalid]="password.invalid && password.touched"
+                />
+                <app-error-message [control]="password" />
+              </div>
+            </div>
+          }
+
+          <!-- Navigation -->
+          <div class="wizard-nav">
+            <button
+              type="button"
+              class="btn btn--outline"
+              (click)="prevStep()"
+              [disabled]="currentStep === 1"
+            >
+              Back
+            </button>
+
+            @if (currentStep < 3) {
+              <button
+                type="button"
+                class="btn btn--primary"
+                (click)="nextStep()"
+                [disabled]="!canAdvance()"
+              >
+                Next
+              </button>
+            }
+
+            @if (currentStep === 3) {
+              <button
+                type="button"
+                class="btn btn--primary"
+                (click)="onSubmitWizard()"
+                [disabled]="!wizardForm.valid"
+              >
+                Submit
+              </button>
+            }
+          </div>
+
+          @if (submittedWizard) {
+            <div class="alert alert--success submitted-result">
+              <strong>Submitted values:</strong>
+              <pre>{{ submittedWizard | json }}</pre>
+            </div>
+          }
+        </div>
+
+        <!-- Playground -->
+        <div>
+          <p class="playground-label">Live state</p>
+          <pre class="playground-state">Step: {{ currentStep }} / 3</pre>
+          <pre class="playground-state">Status: {{ currentStepGroup.status }}</pre>
+          <pre class="playground-state">{{ currentStepGroup.value | json }}</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
