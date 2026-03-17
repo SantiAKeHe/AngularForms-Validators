@@ -1,0 +1,101 @@
+<section class="page" id="template-driven">
+  <span class="section-badge badge--template">Topic 02</span>
+  <h1 class="page-title">Template-driven Forms</h1>
+  <p class="page-subtitle">
+    Explore the declarative approach with <code>ngModel</code> for simpler forms
+    and direct comparison with Reactive Forms.
+  </p>
+
+  <div class="demo-grid">
+
+    <!-- ── Form ───────────────────────────────────────────────────────── -->
+    <div class="form-wrapper">
+      <h2>Registration Form</h2>
+
+      <form #registrationForm="ngForm" (ngSubmit)="onSubmit()">
+
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            id="name"
+            type="text"
+            name="name"
+            [(ngModel)]="model.name"
+            #nameRef="ngModel"
+            required
+            [attr.aria-invalid]="nameRef.invalid && nameRef.touched ? true : null"
+            placeholder="Jane Doe"
+          />
+          @if (nameRef.invalid && nameRef.touched) {
+            <span class="error-message">This field is required</span>
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            [(ngModel)]="model.email"
+            #emailRef="ngModel"
+            required
+            email
+            [attr.aria-invalid]="emailRef.invalid && emailRef.touched ? true : null"
+            placeholder="jane@example.com"
+          />
+          @if (emailRef.invalid && emailRef.touched) {
+            @if (emailRef.errors?.['required']) {
+              <span class="error-message">This field is required</span>
+            } @else if (emailRef.errors?.['email']) {
+              <span class="error-message">Enter a valid email address</span>
+            }
+          }
+        </div>
+
+        <div class="form-group">
+          <label for="age">Age</label>
+          <input
+            id="age"
+            type="number"
+            name="age"
+            [(ngModel)]="model.age"
+            #ageRef="ngModel"
+            required
+            min="18"
+            [attr.aria-invalid]="ageRef.invalid && ageRef.touched ? true : null"
+            placeholder="18"
+          />
+          @if (ageRef.invalid && ageRef.touched) {
+            @if (ageRef.errors?.['required']) {
+              <span class="error-message">This field is required</span>
+            } @else if (ageRef.errors?.['min']) {
+              <span class="error-message">You must be at least 18</span>
+            }
+          }
+        </div>
+
+        <button type="submit" [disabled]="registrationForm.invalid">Submit</button>
+
+      </form>
+
+      @if (submittedValues()) {
+        <div class="alert alert--success" style="margin-top: 1.25rem">
+          <strong>Submitted values:</strong>
+          <pre style="margin-top: 0.5rem; background: transparent; color: inherit; padding: 0; font-size: 0.85rem">{{ submittedValues() | json }}</pre>
+        </div>
+      }
+    </div>
+
+    <!-- ── Playground ─────────────────────────────────────────────────── -->
+    <div>
+      <p class="playground-label">Live Form State</p>
+      <pre class="playground-state">{{ model | json }}</pre>
+      <pre class="playground-state">Status: {{ registrationForm.status }}</pre>
+      <pre class="playground-state">name errors: {{ nameRef.errors | json }}</pre>
+      <pre class="playground-state">email errors: {{ emailRef.errors | json }}</pre>
+      <pre class="playground-state">age errors: {{ ageRef.errors | json }}</pre>
+    </div>
+
+  </div>
+</section>
