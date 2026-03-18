@@ -134,3 +134,32 @@ In Demo 1 (bad pattern), click the email field and then click away without typin
 ### The one thing the junior must walk away knowing
 
 Put all error strings in one map in one component, pass the FormControl as an input, and every field in every form automatically gets consistent, centralized error messages with a single HTML tag.
+
+---
+
+## 5. Kendo UI for Angular
+
+### What to say
+
+Kendo UI is a commercial component library by Progress Telerik. Its Angular components implement `ControlValueAccessor`, which means they plug directly into Reactive Forms using `formControlName` — no wrappers, no adapters, no extra logic. There are two dropdown variants: `ComboBox` allows the user to pick from a list or type a custom value; `DropDownList` restricts the user to the predefined options only. Both accept the same `[data]` binding and work with `Validators.required` out of the box.
+
+### What to show on screen
+
+```
+Open:    src/app/kendo-ui/kendo-ui.component.ts — lines 1 to 46
+Point at: the KENDO_COMBOBOX and KENDO_DROPDOWNLIST imports (lines 4–5),
+          the spread syntax in the imports array (lines 15–16),
+          and the two typed FormControls: FormControl<string | null> (lines 27, 38)
+
+Then open: src/app/kendo-ui/kendo-ui.component.html — lines 13 to 29
+Point at:  formControlName="country" on <kendo-combobox> — same API as a native input,
+           and <app-error-message [control]="country" /> working unchanged
+```
+
+### Live interaction
+
+In the ComboBox demo, click the dropdown and select "Ecuador" — the playground on the right shows `Value: { "country": "Ecuador" }` and `Status: VALID`. Then clear the field and tab away — `Errors: { "required": true }` appears and the error message component shows "This field is required". In the DropDownList demo, open the dropdown — notice you cannot type; you can only pick. Select a language and watch the playground update.
+
+### The one thing the junior must walk away knowing
+
+Any component that implements `ControlValueAccessor` works with `formControlName` — Kendo, Angular Material, or any third-party library. You do not need to learn a new form API; the Reactive Forms layer stays exactly the same.
