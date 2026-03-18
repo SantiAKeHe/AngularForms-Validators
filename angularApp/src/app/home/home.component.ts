@@ -103,5 +103,21 @@ export class HomeComponent {
       badgeClass: 'badge--errors',
       route: '/errors',
     },
+    {
+      tag: 'Topic 06',
+      icon: '🎨',
+      title: 'Kendo UI',
+      description:
+        'Integrate Kendo UI components with Angular Reactive Forms using standalone utility arrays — no NgModules.',
+      points: [
+        'KENDO_COMBOBOX — pick or type freely',
+        'KENDO_DROPDOWNLIST — pick only',
+        'ControlValueAccessor + formControlName',
+        'Standalone utility arrays (spread)',
+      ],
+      cardClass: 'topic-card--kendo',
+      badgeClass: 'badge--kendo',
+      route: '/kendo-ui',
+    },
   ];
 }

@@ -1,0 +1,218 @@
+<section class="page" id="kendo-ui">
+  <span class="section-badge badge--kendo">Topic 06</span>
+  <h1 class="page-title">Kendo UI for Angular</h1>
+
+  <p class="page-subtitle">
+    Kendo UI for Angular is a commercial UI component library by Progress Telerik.
+    It provides rich, accessible components — including dropdowns, date pickers, grids, and more —
+    that integrate natively with Angular Reactive Forms via <code>ControlValueAccessor</code>.
+    No adapters or wrappers needed.
+  </p>
+
+  <!-- ══ SETUP ═══════════════════════════════════════════════════════════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">Step 1 — Install the package</h2>
+    <p class="demo-description">
+      Add the Kendo Angular dropdowns package and its peer dependencies using npm.
+      Kendo UI requires a license for production use.
+    </p>
+
+    <pre class="code-snippet">npm install --save @progress/kendo-angular-dropdowns @progress/kendo-angular-common @progress/kendo-theme-default</pre>
+
+    <h2 class="demo-heading setup-heading">Step 2 — Import the theme in styles.scss</h2>
+    <p class="demo-description">
+      Kendo components rely on a CSS theme. Add the default theme to your global stylesheet.
+    </p>
+
+    <pre class="code-snippet">/* styles.scss */
+@use '@progress/kendo-theme-default/dist/all';</pre>
+
+    <h2 class="demo-heading setup-heading">Step 3 — Use standalone utility arrays</h2>
+    <p class="demo-description">
+      Kendo UI ships standalone utility arrays (e.g. <code>KENDO_COMBOBOX</code>,
+      <code>KENDO_DROPDOWNLIST</code>) that contain all the components and directives
+      needed for that widget. Spread them into the <code>imports</code> array of
+      your standalone component — no NgModule required.
+    </p>
+
+    <pre class="code-snippet">import &#123; KENDO_COMBOBOX &#125; from '@progress/kendo-angular-dropdowns';
+import &#123; KENDO_DROPDOWNLIST &#125; from '@progress/kendo-angular-dropdowns';
+
+&#64;Component(&#123;
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    ...KENDO_COMBOBOX,      // spread — includes ComboBoxComponent + directives
+    ...KENDO_DROPDOWNLIST,  // spread — includes DropDownListComponent + directives
+  ],
+&#125;)</pre>
+  </div>
+
+  <!-- ══ DEMO 1 — ComboBox ═════════════════════════════════════════════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">ComboBox — pick from a list or type a custom value</h2>
+    <p class="demo-description">
+      <code>&lt;kendo-combobox&gt;</code> is an autocomplete-style dropdown.
+      The user can either select from the provided data list <em>or</em> type a custom value
+      that is not in the list. Both actions update the bound <code>FormControl</code>.
+    </p>
+
+    <h3 class="sub-heading">How to wire it up</h3>
+    <pre class="code-snippet">// 1. Define the form
+form = this.fb.group(&#123;
+  country: this.fb.control&lt;string | null&gt;(null, Validators.required),
+&#125;);
+
+// 2. Expose a typed getter
+get country(): FormControl&lt;string | null&gt; &#123;
+  return this.form.controls.country;
+&#125;
+
+// 3. Define the data array
+countries: string[] = ['Ecuador', 'Colombia', 'Peru', 'Chile', 'Argentina'];</pre>
+
+    <pre class="code-snippet">&lt;!-- 4. Bind in the template --&gt;
+&lt;form [formGroup]="form"&gt;
+  &lt;kendo-combobox
+    formControlName="country"
+    [data]="countries"
+    placeholder="Select a country"&gt;
+  &lt;/kendo-combobox&gt;
+  &lt;app-error-message [control]="country" /&gt;
+&lt;/form&gt;</pre>
+
+    <h3 class="sub-heading">Live demo</h3>
+    <div class="demo-layout">
+      <form [formGroup]="form" class="demo-form">
+        <div class="field">
+          <label for="country">Country</label>
+          <kendo-combobox
+            id="country"
+            formControlName="country"
+            [data]="countries"
+            placeholder="Select a country">
+          </kendo-combobox>
+          <app-error-message [control]="country" />
+        </div>
+      </form>
+
+      <div class="playground">
+        <h3 class="playground-heading">Playground</h3>
+        <pre class="playground-state">Value: {{ form.value | json }}</pre>
+        <pre class="playground-state">Status: {{ form.status }}</pre>
+        <pre class="playground-state">Errors: {{ country.errors | json }}</pre>
+        <pre class="playground-state">Touched: {{ country.touched }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DEMO 2 — DropDownList ══════════════════════════════════════════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">DropDownList — pick only from a predefined list</h2>
+    <p class="demo-description">
+      <code>&lt;kendo-dropdownlist&gt;</code> is a strict selection dropdown.
+      The user must pick from the provided options — typing a custom value is not allowed.
+      Use this when the value must be constrained to a known set.
+    </p>
+
+    <h3 class="sub-heading">How to wire it up</h3>
+    <pre class="code-snippet">// 1. Define the form
+form2 = this.fb.group(&#123;
+  language: this.fb.control&lt;string | null&gt;(null, Validators.required),
+&#125;);
+
+// 2. Expose a typed getter
+get language(): FormControl&lt;string | null&gt; &#123;
+  return this.form2.controls.language;
+&#125;
+
+// 3. Define the data array
+languages: string[] = ['TypeScript', 'JavaScript', 'Python', 'Java', 'Go'];</pre>
+
+    <pre class="code-snippet">&lt;!-- 4. Bind in the template --&gt;
+&lt;form [formGroup]="form2"&gt;
+  &lt;kendo-dropdownlist
+    formControlName="language"
+    [data]="languages"
+    [defaultItem]="'Select a language'"&gt;
+  &lt;/kendo-dropdownlist&gt;
+  &lt;app-error-message [control]="language" /&gt;
+&lt;/form&gt;</pre>
+
+    <h3 class="sub-heading">Live demo</h3>
+    <div class="demo-layout">
+      <form [formGroup]="form2" class="demo-form">
+        <div class="field">
+          <label for="language">Programming language</label>
+          <kendo-dropdownlist
+            id="language"
+            formControlName="language"
+            [data]="languages"
+            [defaultItem]="'Select a language'">
+          </kendo-dropdownlist>
+          <app-error-message [control]="language" />
+        </div>
+      </form>
+
+      <div class="playground">
+        <h3 class="playground-heading">Playground</h3>
+        <pre class="playground-state">Value: {{ form2.value | json }}</pre>
+        <pre class="playground-state">Status: {{ form2.status }}</pre>
+        <pre class="playground-state">Errors: {{ language.errors | json }}</pre>
+        <pre class="playground-state">Touched: {{ language.touched }}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ DEMO 3 — Side by side comparison ══════════════════════════════════ -->
+  <div class="demo-block">
+    <h2 class="demo-heading">ComboBox vs DropDownList — side by side</h2>
+    <p class="demo-description">
+      Choose the right component based on whether your use case requires strict
+      value constraints or allows user-typed custom input.
+    </p>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>ComboBox</th>
+          <th>DropDownList</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Custom values</td>
+          <td class="cell-yes">Yes</td>
+          <td class="cell-no">No</td>
+        </tr>
+        <tr>
+          <td>Typing to filter</td>
+          <td class="cell-yes">Yes</td>
+          <td class="cell-no">No</td>
+        </tr>
+        <tr>
+          <td>Predefined list only</td>
+          <td class="cell-no">No</td>
+          <td class="cell-yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Reactive Forms support</td>
+          <td class="cell-yes">Yes</td>
+          <td class="cell-yes">Yes</td>
+        </tr>
+        <tr>
+          <td>Import token</td>
+          <td><code>KENDO_COMBOBOX</code></td>
+          <td><code>KENDO_DROPDOWNLIST</code></td>
+        </tr>
+        <tr>
+          <td>HTML element</td>
+          <td><code>&lt;kendo-combobox&gt;</code></td>
+          <td><code>&lt;kendo-dropdownlist&gt;</code></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</section>
