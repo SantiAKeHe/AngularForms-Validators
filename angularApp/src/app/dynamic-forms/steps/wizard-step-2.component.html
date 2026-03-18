@@ -1,0 +1,21 @@
+<div [formGroup]="group">
+  <div class="form-group">
+    <label>Email</label>
+    <input
+      formControlName="email"
+      type="email"
+      [attr.aria-invalid]="email.invalid && email.touched"
+    />
+    <app-error-message [control]="email" />
+  </div>
+  <div class="form-group">
+    <label>Age</label>
+    <input
+      formControlName="age"
+      type="number"
+      placeholder="18+"
+      [attr.aria-invalid]="age.invalid && age.touched"
+    />
+    <app-error-message [control]="age" />
+  </div>
+</div>
