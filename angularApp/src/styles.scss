@@ -146,18 +146,21 @@ a.topic-link {
 .topic-card--validator { border-color: #d97706; }
 .topic-card--dynamic   { border-color: #9333ea; }
 .topic-card--errors    { border-color: #e11d48; }
+.topic-card--kendo     { border-color: #0ea5e9; }
 
 .topic-card--reactive h2  { border-left-color: #6366f1; }
 .topic-card--template h2  { border-left-color: #14b8a6; }
 .topic-card--validator h2 { border-left-color: #d97706; }
 .topic-card--dynamic h2   { border-left-color: #9333ea; }
 .topic-card--errors h2    { border-left-color: #e11d48; }
+.topic-card--kendo h2     { border-left-color: #0ea5e9; }
 
 .topic-card--reactive:hover  { box-shadow: 0 8px 24px rgba(99, 102, 241, 0.2); }
 .topic-card--template:hover  { box-shadow: 0 8px 24px rgba(20, 184, 166, 0.2); }
 .topic-card--validator:hover { box-shadow: 0 8px 24px rgba(217, 119, 6, 0.2); }
 .topic-card--dynamic:hover   { box-shadow: 0 8px 24px rgba(147, 51, 234, 0.2); }
 .topic-card--errors:hover    { box-shadow: 0 8px 24px rgba(225, 29, 72, 0.2); }
+.topic-card--kendo:hover     { box-shadow: 0 8px 24px rgba(14, 165, 233, 0.2); }
 
 /* ── Badges ──────────────────────────────────────────────────────────────────── */
 
@@ -177,6 +180,7 @@ a.topic-link {
 .badge--validator { background: #fffbeb; color: #92400e; }
 .badge--dynamic   { background: #faf5ff; color: #6b21a8; }
 .badge--errors    { background: #fff1f2; color: #9f1239; }
+.badge--kendo     { background: #e0f2fe; color: #0369a1; }
 
 /* ── Info panel (dark, bottom of page) ──────────────────────────────────────── */
 
