@@ -9,7 +9,7 @@
   <div class="topics-grid">
     @for (card of topicCards; track card.tag) {
       <a class="form-wrapper topic-card" [class]="card.cardClass" [routerLink]="card.route">
-        <span class="badge" [class]="card.badgeClass">{{ card.tag }}</span>
+        <!-- <span class="badge" [class]="card.badgeClass">{{ card.tag }}</span> -->
         <h2>{{ card.icon }} {{ card.title }}</h2>
         <p>{{ card.description }}</p>
         <ul>
