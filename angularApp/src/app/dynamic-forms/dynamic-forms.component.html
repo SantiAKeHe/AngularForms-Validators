@@ -111,78 +111,15 @@
 
       <div class="demo-grid">
         <!-- Wizard form -->
-        <div [formGroup]="wizardForm">
-          <!-- Step 1 -->
+        <div>
           @if (currentStep === 1) {
-            <div formGroupName="step1">
-              <div class="form-group">
-                <label>First Name</label>
-                <input
-                  formControlName="firstName"
-                  type="text"
-                  [attr.aria-invalid]="firstName.invalid && firstName.touched"
-                />
-                <app-error-message [control]="firstName" />
-              </div>
-              <div class="form-group">
-                <label>Last Name</label>
-                <input
-                  formControlName="lastName"
-                  type="text"
-                  [attr.aria-invalid]="lastName.invalid && lastName.touched"
-                />
-                <app-error-message [control]="lastName" />
-              </div>
-            </div>
+            <app-wizard-step-1 [group]="step1" />
           }
-
-          <!-- Step 2 -->
           @if (currentStep === 2) {
-            <div formGroupName="step2">
-              <div class="form-group">
-                <label>Email</label>
-                <input
-                  formControlName="email"
-                  type="email"
-                  [attr.aria-invalid]="email.invalid && email.touched"
-                />
-                <app-error-message [control]="email" />
-              </div>
-              <div class="form-group">
-                <label>Age</label>
-                <input
-                  formControlName="age"
-                  type="number"
-                  placeholder="18+"
-                  [attr.aria-invalid]="wizardAge.invalid && wizardAge.touched"
-                />
-                <app-error-message [control]="wizardAge" />
-              </div>
-            </div>
+            <app-wizard-step-2 [group]="step2" />
           }
-
-          <!-- Step 3 -->
           @if (currentStep === 3) {
-            <div formGroupName="step3">
-              <div class="form-group">
-                <label>Username</label>
-                <input
-                  formControlName="username"
-                  type="text"
-                  [attr.aria-invalid]="username.invalid && username.touched"
-                />
-                <app-error-message [control]="username" />
-              </div>
-              <div class="form-group">
-                <label>Password</label>
-                <input
-                  formControlName="password"
-                  type="password"
-                  [attr.aria-invalid]="password.invalid && password.touched"
-                />
-                <app-error-message [control]="password" />
-              </div>
-            </div>
+            <app-wizard-step-3 [group]="step3" />
           }
 
           <!-- Navigation -->

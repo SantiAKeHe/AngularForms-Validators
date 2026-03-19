@@ -1,0 +1,20 @@
+<div [formGroup]="group">
+  <div class="form-group">
+    <label>First Name</label>
+    <input
+      formControlName="firstName"
+      type="text"
+      [attr.aria-invalid]="firstName.invalid && firstName.touched"
+    />
+    <app-error-message [control]="firstName" />
+  </div>
+  <div class="form-group">
+    <label>Last Name</label>
+    <input
+      formControlName="lastName"
+      type="text"
+      [attr.aria-invalid]="lastName.invalid && lastName.touched"
+    />
+    <app-error-message [control]="lastName" />
+  </div>
+</div>
