@@ -18,7 +18,7 @@ echo "✅ Label 'jr' confirmado"
 # Crear rama
 BRANCH="jr/issue-${ISSUE_NUM}"
 
-git checkout main && git pull origin main
+git checkout local && git pull origin local
 git checkout -b "$BRANCH"
 echo "🌿 Rama: $BRANCH"
 
