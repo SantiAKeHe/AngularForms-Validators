@@ -11,11 +11,21 @@ import {
 import { noSpacesValidator } from '../custom-validators/no-spaces.validator';
 import { minAgeValidator } from '../custom-validators/min-age.validator';
 import { ErrorMessageComponent } from '../shared/components/error-message/error-message.component';
+import { WizardStep1Component } from './steps/wizard-step-1.component';
+import { WizardStep2Component } from './steps/wizard-step-2.component';
+import { WizardStep3Component } from './steps/wizard-step-3.component';
 
 @Component({
   selector: 'app-dynamic-forms',
   standalone: true,
-  imports: [ReactiveFormsModule, JsonPipe, ErrorMessageComponent],
+  imports: [
+    ReactiveFormsModule,
+    JsonPipe,
+    ErrorMessageComponent,
+    WizardStep1Component,
+    WizardStep2Component,
+    WizardStep3Component,
+  ],
   templateUrl: './dynamic-forms.component.html',
   styleUrl: './dynamic-forms.component.scss',
 })
@@ -97,30 +107,6 @@ export class DynamicFormsComponent {
     if (this.currentStep === 1) return this.step1;
     if (this.currentStep === 2) return this.step2;
     return this.step3;
-  }
-
-  // Step 1 controls
-  get firstName() {
-    return this.step1.controls.firstName;
-  }
-  get lastName() {
-    return this.step1.controls.lastName;
-  }
-
-  // Step 2 controls
-  get email() {
-    return this.step2.controls.email;
-  }
-  get wizardAge() {
-    return this.step2.controls.age;
-  }
-
-  // Step 3 controls
-  get username() {
-    return this.step3.controls.username;
-  }
-  get password() {
-    return this.step3.controls.password;
   }
 
   canAdvance(): boolean {
